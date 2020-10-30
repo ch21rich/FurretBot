@@ -62,7 +62,7 @@ void stopDrive(bool hold = false){
 
 void intake(double velocity){
   //Shortcut to power the intakes
-  LeftIntake.move_velocity(velocity / 3);
+  LeftIntake.move_velocity(velocity);
   RightIntake.move_velocity(velocity);
 }
 
@@ -73,6 +73,8 @@ void rollers(double velocity){
 }
 
 void flipout(){
+  LeftIntake.move_velocity(200);
+  delay(1000);
   intake(200);
   rollers(200);
   delay(250);
@@ -80,20 +82,21 @@ void flipout(){
   rollers(0);
 }
 
-void driveForward(double inches, pidController controller, double angle, pidController rtController){
+void driveForward(double inches, pidController controller, double angle, pidController rtController, int timeMax = 5000){
   //Reset The Controller's integral values
   controller.resetID();
   rtController.resetID();
   //Get the current tracking wheel value, and calculate a target X inches away.
   double initialY = ((double) yWheel.get_value()) * wheelCircumfrence/360;
   double targetY = ((double) yWheel.get_value()) * wheelCircumfrence/360 + inches;
+  int initialT = millis();
 
   //Set the PID's target, and initialize its error.
   controller.tVal = targetY;
   controller.error = controller.tVal - ((double) yWheel.get_value()) * wheelCircumfrence/360;
   rtController.tVal = angle;
   rtController.error = angle - inertial.get_rotation();
-  while(!controller.withinTarget()){
+  while(!controller.withinTarget() && millis() - initialT < timeMax){
     printOnScreen();
     //Calculate speed based on how far away we are from target, and the time taken.
     rtController.update(inertial.get_rotation());
@@ -110,20 +113,21 @@ void driveForward(double inches, pidController controller, double angle, pidCont
   //Wait for the drive to settle for a bit
 }
 
-void driveStrafe(double inches, pidController controller, double angle, pidController rtController){
+void driveStrafe(double inches, pidController controller, double angle, pidController rtController, int timeMax = 5000){
   //Reset The Controller's integral values
   controller.resetID();
   rtController.resetID();
   //Get the current tracking wheel value, and calculate a target X inches away.
   double initialX = ((double) xWheel.get_value()) * wheelCircumfrence/360;
   double targetX = ((double) xWheel.get_value()) * wheelCircumfrence/360 + inches;
+  int initialT = millis();
 
   //Set the PID's target, and initialize its error.
   controller.tVal = targetX;
   controller.error = controller.tVal - ((double) xWheel.get_value()) * wheelCircumfrence/360;
   rtController.tVal = angle;
   rtController.error = angle - inertial.get_rotation();
-  while(!controller.withinTarget()){
+  while(!controller.withinTarget() && millis() - initialT < timeMax){
     printOnScreen();
     //Calculate speed based on how far away we are from target, and the time taken.
     rtController.update(inertial.get_rotation());

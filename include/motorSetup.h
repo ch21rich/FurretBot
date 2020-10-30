@@ -54,8 +54,8 @@ ramp BRRamp = ramp(1000);
 ramp LIRamp = ramp(2000);
 ramp RIRamp = ramp(2000);
 
-pidController autoLnPID = pidController(0, 2, 0.2, 0);
-pidController autoLnrtPID = pidController(0, 2, 0, 0);
+pidController autoLnPID = pidController(0, 1.5, 0.2, 1.5);
+pidController autoLnrtPID = pidController(0, 2, 0, 2);
 pidController autoPerpPID = pidController(0, 0, 0, 0);
 pidController autoRtPID = pidController(0, 2, 0.005, 3);
 
@@ -78,6 +78,7 @@ void calibrateSensors(){
   lcd::print(1, "Calibration took %f", millis() - timeInit);
 
   //Additional PID Tuning
+  autoLnPID.tolerance = 0.2;
   autoLnPID.minLim = 50;
   autoLnPID.iLim = 100;
   autoLnrtPID.minLim = 0;
