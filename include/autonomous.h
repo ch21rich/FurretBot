@@ -19,7 +19,7 @@ void skills(){
   driveForward(21.5, autoLnPID, 0, autoLnrtPID);
   rotate(-135, autoRtPID);
   driveForward(24, autoLnPID, -135, autoLnrtPID);
-  rollers(50);
+  rollers(200);
   intake(-200);
   delay(1500);
   intake(0);
