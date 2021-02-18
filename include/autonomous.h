@@ -28,7 +28,7 @@ void skills(){
   rotate(0, autoRtPID);
 
   intake(-200);
-  rollers(50);
+  rollers(100);
   driveForward(43, autoLnPID, 0, autoLnrtPID);
   delay(100);
   intake(0);
@@ -44,7 +44,7 @@ void skills(){
   driveStrafe(2.5, autoLnPID, 0, autoLnrtPID);
 
   intake(-200);
-  rollers(50);
+  rollers(100);
   driveForward(44, autoLnPID, 0, autoLnrtPID);
   delay(100);
   intake(0);
